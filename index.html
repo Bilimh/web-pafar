@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Pafar — Présence web pour maisons de luxe & artisans d'excellence</title>
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap"
+        rel="stylesheet">
+        <style>
+            :root {
+                /* LIGHT MODE (par défaut) */
+                --color-bg: #FFFFFF;
+                --color-surface: #F8F8FA;
+                --color-surface-light: #F0F0F4;
+                --color-border: #E2E2E8;
+                --color-primary: #0066FF;
+                --color-primary-dim: #0052CC;
+                --color-secondary: #7B68EE;
+                --color-text: #1A1A2E;
+                --color-text-muted: #4A4A5A;
+                --color-text-subtle: #8A8A9A;
+        
+                --font-serif: 'Instrument Serif', serif;
+                --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+                --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        
+                --transition-slow: 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+                --transition-fast: 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+                --transition-bounce: 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+        
+                --glow-primary: 0 0 20px rgba(0, 102, 255, 0.15);
+                --glow-secondary: 0 0 15px rgba(123, 104, 238, 0.12);
+            }
+        
+            /* DARK MODE */
+            [data-theme="dark"] {
+                --color-bg: #0A0A0F;
+                --color-surface: #111118;
+                --color-surface-light: #1A1A24;
+                --color-border: #2A2A35;
+                --color-primary: #00FFD1;
+                --color-primary-dim: #02251e;
+                --color-secondary: #7B68EE;
+                --color-text: #EDEDED;
+                --color-text-muted: #A0A0B0;
+                --color-text-subtle: #6B6B7A;
+                --glow-primary: 0 0 20px rgba(0, 255, 209, 0.3);
+                --glow-secondary: 0 0 15px rgba(123, 104, 238, 0.25);
+            }
+        
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+        
+            body {
+                font-family: var(--font-sans);
+                background-color: var(--color-bg);
+                color: var(--color-text);
+                line-height: 1.5;
+                font-weight: 400;
+                font-size: 17px;
+                letter-spacing: -0.01em;
+                overflow-x: hidden;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+        
+            /* Typographie */
+            h1, h2, h3, .serif {
+                font-family: var(--font-serif);
+                font-weight: 400;
+                letter-spacing: -0.02em;
+            }
+        
+            h1 {
+                font-size: clamp(3rem, 7vw, 5.5rem);
+                line-height: 1.1;
+                margin-bottom: 1.5rem;
+                background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 40%, var(--color-secondary) 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+        
+            h2 {
+                font-size: clamp(2rem, 5vw, 3.2rem);
+                margin-bottom: 1.2rem;
+                font-weight: 400;
+                position: relative;
+                display: inline-block;
+            }
+        
+            h2::after {
+                content: '';
+                position: absolute;
+                bottom: -8px;
+                left: 0;
+                width: 60px;
+                height: 2px;
+                background: linear-gradient(90deg, var(--color-primary), transparent);
+            }
+        
+            h3 {
+                font-size: 1.35rem;
+                font-weight: 400;
+                margin-bottom: 0.75rem;
+                color: var(--color-primary);
+            }
+        
+            .container {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 0 40px;
+            }
+        
+            section {
+                padding: 100px 0;
+                border-bottom: 1px solid var(--color-border);
+            }
+        
+            section:last-child {
+                border-bottom: none;
+            }
+        
+            /* Theme Toggle Button */
+            .theme-toggle {
+                background: var(--color-surface-light);
+                border: 1px solid var(--color-border);
+                border-radius: 40px;
+                padding: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+            }
+        
+            .theme-toggle:hover {
+                border-color: var(--color-primary);
+            }
+        
+            .theme-toggle svg {
+                width: 18px;
+                height: 18px;
+                stroke: var(--color-text-muted);
+                transition: all 0.3s ease;
+            }
+        
+            .theme-toggle .sun-icon,
+            .theme-toggle .moon-icon {
+                padding: 4px;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+            }
+        
+            [data-theme="light"] .theme-toggle .sun-icon {
+                background: var(--color-primary);
+            }
+        
+            [data-theme="light"] .theme-toggle .sun-icon svg {
+                stroke: white;
+            }
+        
+            [data-theme="dark"] .theme-toggle .moon-icon {
+                background: var(--color-primary);
+            }
+        
+            [data-theme="dark"] .theme-toggle .moon-icon svg {
+                stroke: var(--color-bg);
+            }
+        
+            /* Boutons */
+            .btn-primary {
+                background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dim));
+                color: white;
+                border: none;
+                padding: 14px 32px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+                cursor: pointer;
+                display: inline-block;
+                text-decoration: none;
+                font-family: var(--font-mono);
+                border-radius: 2px;
+                position: relative;
+                overflow: hidden;
+            }
+        
+            .btn-primary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            }
+        
+            .btn-primary:hover::before {
+                left: 100%;
+            }
+        
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--glow-primary);
+            }
+        
+            /* Navbar */
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 20px 40px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(12px);
+                z-index: 1000;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--color-border);
+                transition: background 0.3s ease;
+            }
+        
+            [data-theme="dark"] nav {
+                background: rgba(10, 10, 15, 0.95);
+            }
+        
+            .logo {
+                font-family: var(--font-mono);
+                font-size: 1.4rem;
+                font-weight: 500;
+                color: var(--color-primary);
+                text-decoration: none;
+                letter-spacing: -0.02em;
+            }
+        
+            .nav-links {
+                display: flex;
+                gap: 48px;
+                list-style: none;
+                align-items: center;
+            }
+        
+            .nav-links a {
+                text-decoration: none;
+                color: var(--color-text-muted);
+                font-size: 0.8rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                font-weight: 500;
+                font-family: var(--font-mono);
+                transition: all 0.2s;
+            }
+        
+            .nav-links a:hover {
+                color: var(--color-primary);
+            }
+        
+            /* Hamburger */
+            .hamburger {
+                display: none;
+                flex-direction: column;
+                cursor: pointer;
+                z-index: 1002;
+            }
+        
+            .hamburger span {
+                width: 28px;
+                height: 1.5px;
+                background: var(--color-text);
+                margin: 5px 0;
+                transition: var(--transition-bounce);
+            }
+        
+            /* Mobile menu */
+            .mobile-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 400px;
+                height: 100vh;
+                background: var(--color-bg);
+                backdrop-filter: blur(20px);
+                z-index: 1001;
+                transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                padding: 80px 48px 48px 48px;
+                box-shadow: -20px 0 40px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+                border-left: 1px solid var(--color-border);
+            }
+        
+            .mobile-menu.active {
+                right: 0;
+            }
+        
+            .menu-close {
+                position: absolute;
+                top: 28px;
+                right: 28px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                padding: 8px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1002;
+            }
+        
+            .menu-close svg {
+                stroke: var(--color-text);
+                width: 28px;
+                height: 28px;
+                transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+            }
+        
+            .menu-close:hover svg {
+                transform: rotate(90deg);
+            }
+        
+            .mobile-menu ul {
+                list-style: none;
+                margin-top: 40px;
+            }
+        
+            .mobile-menu li {
+                margin-bottom: 32px;
+                opacity: 0;
+                transform: translateX(20px);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+                transition-delay: calc(0.05s * var(--i, 0));
+            }
+        
+            .mobile-menu.active li {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        
+            .mobile-menu li:nth-child(1) { --i: 1; }
+            .mobile-menu li:nth-child(2) { --i: 2; }
+            .mobile-menu li:nth-child(3) { --i: 3; }
+            .mobile-menu li:nth-child(4) { --i: 4; }
+            .mobile-menu li:nth-child(5) { --i: 5; }
+        
+            .mobile-menu a {
+                text-decoration: none;
+                font-size: 1.5rem;
+                font-family: var(--font-serif);
+                color: var(--color-text);
+                transition: all 0.2s ease;
+                display: inline-block;
+            }
+        
+            .mobile-menu a:hover {
+                transform: translateX(8px);
+                color: var(--color-primary);
+            }
+        
+            .menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.4s ease, visibility 0.4s ease;
+            }
+        
+            .menu-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 6px);
+            }
+        
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+        
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(8px, -6px);
+            }
+        
+            /* ========== HERO PLEIN ÉCRAN ========== */
+            .hero {
+                position: relative;
+                min-height: 100vh;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                overflow: hidden;
+                padding: 0;
+            }
+        
+            /* Canvas en arrière-plan */
+            #hero-canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
+        
+            /* Contenu au-dessus du canvas */
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+        
+            /* Badge */
+            .hero-badge {
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 4px;
+                color: var(--color-primary);
+                margin-bottom: 1.5rem;
+                display: inline-block;
+                border: 1px solid var(--color-border);
+                padding: 6px 16px;
+                border-radius: 40px;
+                backdrop-filter: blur(4px);
+            }
+        
+            [data-theme="light"] .hero-badge {
+                background: rgba(0, 102, 255, 0.05);
+            }
+        
+            [data-theme="dark"] .hero-badge {
+                background: rgba(0, 255, 209, 0.05);
+            }
+        
+            /* Titre */
+            .hero-title {
+                font-size: clamp(2.5rem, 8vw, 5rem);
+                line-height: 1.1;
+                margin-bottom: 1.5rem;
+            }
+        
+            .hero-title-line {
+                display: block;
+                background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 40%, var(--color-secondary) 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+            }
+        
+            /* Description */
+            .hero-description {
+                font-size: 1.2rem;
+                max-width: 600px;
+                margin: 0 auto 2rem;
+                color: var(--color-text-muted);
+                line-height: 1.6;
+            }
+        
+            /* Effet de lumière subtil */
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.05), transparent 50%);
+                pointer-events: none;
+                z-index: 1;
+            }
+        
+            [data-theme="dark"] .hero::before {
+                background: radial-gradient(circle at 20% 50%, rgba(0, 255, 209, 0.08), transparent 50%);
+            }
+        
+            /* Gallery */
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 32px;
+                margin: 56px 0;
+            }
+        
+            .gallery-item {
+                position: relative;
+                overflow: hidden;
+                aspect-ratio: 4/3;
+                cursor: pointer;
+                border: 1px solid var(--color-border);
+                background: var(--color-surface);
+            }
+        
+            .gallery-item:hover {
+                border-color: var(--color-primary);
+                box-shadow: var(--glow-primary);
+            }
+        
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.6s ease;
+                display: block;
+            }
+        
+            .gallery-item:hover img {
+                transform: scale(1.05);
+            }
+        
+            .gallery-caption {
+                margin-top: 16px;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--color-text-subtle);
+                font-family: var(--font-mono);
+            }
+        
+            /* Grids */
+            .grid-3 {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 48px;
+                margin-top: 56px;
+            }
+        
+            .service-card {
+                border-top: 1px solid var(--color-border);
+                padding-top: 32px;
+                transition: all 0.3s ease;
+            }
+        
+            .service-card:hover {
+                border-top-color: var(--color-primary);
+            }
+        
+            .icon-wrapper svg {
+                stroke: var(--color-primary);
+                stroke-width: 1.2;
+                width: 32px;
+                height: 32px;
+            }
+        
+            .small-text {
+                font-size: 0.85rem;
+                color: var(--color-text-muted);
+                margin-top: 12px;
+                line-height: 1.5;
+            }
+        
+            /* Testimonials */
+            .testimonial-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 48px;
+                margin: 56px 0 32px;
+            }
+        
+            .testimonial {
+                border-left: 2px solid var(--color-primary);
+                padding-left: 24px;
+            }
+        
+            .testimonial-text {
+                font-family: var(--font-serif);
+                font-size: 1rem;
+                font-style: italic;
+            }
+        
+            .testimonial-author {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--color-text-subtle);
+                font-family: var(--font-mono);
+                margin-top: 16px;
+            }
+        
+            /* Steps */
+            .steps {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 48px;
+                margin-top: 56px;
+            }
+        
+            .step {
+                flex: 1;
+                border-top: 1px solid var(--color-border);
+                padding-top: 28px;
+            }
+        
+            .step:hover {
+                border-top-color: var(--color-primary);
+            }
+        
+            .step-number {
+                font-family: var(--font-mono);
+                font-size: 2rem;
+                color: var(--color-primary);
+                margin-bottom: 20px;
+            }
+        
+            /* FAQ */
+            .faq-list {
+                margin-top: 32px;
+            }
+        
+            .faq-subtitle {
+                color: var(--color-text-subtle);
+                margin-bottom: 10px;
+                font-size: 1rem;
+            }
+        
+            .faq-item {
+                border-bottom: 1px solid var(--color-border);
+            }
+        
+            .faq-question {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                padding: 24px 0;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 1.05rem;
+                font-family: var(--font-sans);
+                color: var(--color-text);
+            }
+        
+            .faq-toggle {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 8px;
+                color: var(--color-primary);
+                transition: transform 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .faq-toggle svg {
+                transition: transform 0.3s ease;
+                stroke: var(--color-primary);
+            }
+        
+            .faq-item.active .faq-toggle svg {
+                transform: rotate(45deg);
+            }
+        
+            .faq-answer {
+                overflow: hidden;
+                color: var(--color-text-muted);
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+        
+            /* Form */
+            .form-container {
+                background: var(--color-surface);
+                border: 1px solid var(--color-border);
+                padding: 56px 48px;
+                margin-top: 40px;
+            }
+        
+            .form-group {
+                margin-bottom: 28px;
+            }
+        
+            label {
+                display: block;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                margin-bottom: 8px;
+                font-weight: 500;
+                font-family: var(--font-mono);
+                color: var(--color-text-subtle);
+            }
+        
+            input, select, textarea {
+                width: 100%;
+                padding: 14px 0;
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid var(--color-border);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                color: var(--color-text);
+                outline: none;
+                transition: border-color 0.2s;
+            }
+        
+            input:focus, select:focus, textarea:focus {
+                border-bottom-color: var(--color-primary);
+            }
+        
+            textarea {
+                min-height: 80px;
+                resize: vertical;
+            }
+        
+            /* Articles */
+            .articles-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 48px;
+                margin-top: 32px;
+            }
+        
+            .articles-subtitle {
+                color: var(--color-text-subtle);
+                margin-bottom: 48px;
+                font-size: 1rem;
+            }
+        
+            .article-card {
+                background: var(--color-surface);
+                border: 1px solid var(--color-border);
+                transition: all 0.3s ease;
+            }
+        
+            .article-card:hover {
+                transform: translateY(-4px);
+                border-color: var(--color-primary);
+                box-shadow: var(--glow-primary);
+            }
+        
+            .article-image {
+                aspect-ratio: 16/9;
+                overflow: hidden;
+            }
+        
+            .article-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+        
+            .article-card:hover .article-image img {
+                transform: scale(1.03);
+            }
+        
+            .article-content {
+                padding: 28px 24px 32px;
+            }
+        
+            .article-meta {
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                color: var(--color-primary);
+                margin-bottom: 12px;
+                font-family: var(--font-mono);
+            }
+        
+            .article-content h3 {
+                font-size: 1.25rem;
+                font-family: var(--font-serif);
+                font-weight: 400;
+                margin-bottom: 12px;
+                line-height: 1.3;
+                color: var(--color-text);
+            }
+        
+            .article-content p {
+                font-size: 0.85rem;
+                color: var(--color-text-muted);
+                margin-bottom: 20px;
+                line-height: 1.5;
+            }
+        
+            .article-link {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                color: var(--color-primary);
+                text-decoration: none;
+                font-weight: 500;
+                font-family: var(--font-mono);
+                transition: letter-spacing 0.2s;
+            }
+        
+            .article-link:hover {
+                letter-spacing: 2px;
+            }
+        
+            /* Footer */
+            footer {
+                padding: 64px 0 48px;
+                border-top: 1px solid var(--color-border);
+            }
+        
+            .footer-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 48px;
+                margin-bottom: 48px;
+            }
+        
+            .footer-col h4 {
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                margin-bottom: 20px;
+                font-weight: 600;
+                font-family: var(--font-mono);
+                color: var(--color-primary);
+            }
+        
+            .footer-col a {
+                display: block;
+                color: var(--color-text-muted);
+                text-decoration: none;
+                font-size: 0.85rem;
+                margin-bottom: 12px;
+                transition: color 0.2s;
+            }
+        
+            .footer-col a:hover {
+                color: var(--color-primary);
+            }
+        
+            .social-icons {
+                display: flex;
+                gap: 24px;
+            }
+        
+            .social-icons svg {
+                width: 20px;
+                height: 20px;
+                stroke: var(--color-text-muted);
+                stroke-width: 1.2;
+                transition: all 0.2s;
+            }
+        
+            .social-icons a:hover svg {
+                stroke: var(--color-primary);
+            }
+        
+            .copyright {
+                text-align: center;
+                font-size: 0.7rem;
+                color: var(--color-text-subtle);
+                padding-top: 32px;
+                border-top: 1px solid var(--color-border);
+                font-family: var(--font-mono);
+            }
+        
+            /* Responsive */
+            @media (max-width: 900px) {
+                .container {
+                    padding: 0 24px;
+                }
+        
+                section {
+                    padding: 70px 0;
+                }
+        
+                .nav-links {
+                    display: none;
+                }
+        
+                .hamburger {
+                    display: flex;
+                }
+        
+                .hero {
+                    min-height: 100vh;
+                    height: auto;
+                    padding: 100px 0 80px;
+                }
+        
+                .form-container {
+                    padding: 40px 24px;
+                }
+        
+                .articles-grid {
+                    gap: 32px;
+                }
+        
+                .grid-3,
+                .testimonial-grid,
+                .steps {
+                    gap: 32px;
+                }
+        
+                .mobile-menu {
+                    width: 85%;
+                }
+        
+                nav {
+                    padding: 16px 24px;
+                }
+            }
+        
+            @media (max-width: 480px) {
+                h1 {
+                    font-size: clamp(2.5rem, 8vw, 3.5rem);
+                }
+        
+                h2 {
+                    font-size: clamp(1.8rem, 6vw, 2.5rem);
+                }
+        
+                .mobile-menu {
+                    padding: 80px 32px 32px 32px;
+                }
+        
+                .mobile-menu a {
+                    font-size: 1.3rem;
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <nav>
+        <a href="#" class="logo">Pafar</a>
+        <ul class="nav-links">
+            <li><a href="#philosophie">Philosophie</a></li>
+            <li><a href="#travaux">Travaux</a></li>
+            <li><a href="#faq">Questions</a></li>
+            <li><a href="#articles">Ressources</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+                <button class="theme-toggle" id="themeToggle" aria-label="Changer de thème">
+                    <span class="sun-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="moon-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="menu-close" id="menuClose" aria-label="Fermer le menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <ul>
+            <li><a href="#philosophie" class="mobile-link">Philosophie</a></li>
+            <li><a href="#travaux" class="mobile-link">Travaux</a></li>
+            <li><a href="#faq" class="mobile-link">Questions</a></li>
+            <li><a href="#articles" class="mobile-link">Ressources</a></li>
+            <li><a href="#contact" class="mobile-link">Contact</a></li>
+            <li>
+                <button class="theme-toggle" id="themeToggle" aria-label="Changer de thème">
+                    <span class="sun-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                    <span class="moon-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <div class="container">
+ 
+        <!-- Hero avec Three.js -->
+        <div class="hero section-gsap" id="heroCanvas">
+            <canvas id="hero-canvas"></canvas>
+            <div class="hero-content">
+                <div class="hero-badge">Artisan numérique · Maisons de luxe & indépendants</div>
+                <h1 class="hero-title">
+                    <span class="hero-title-line">Pafar.</span>
+                    <span class="hero-title-line">Présence web sans bruit.</span>
+                </h1>
+                <p class="hero-description">Nous concevons des espaces numériques sobres, précis et durables pour celles
+                    et
+                    ceux qui exigent l'excellence.</p>
+                <a href="#contact" class="btn-primary hero-btn">Demander un devis →</a>
+            </div>
+        </div>
+
+        <!-- Philosophie -->
+        <section id="philosophie" class="section-gsap">
+            <h2>Ce que vous ne trouverez pas ici.</h2>
+            <div class="grid-3">
+                <div class="service-card">
+                    <div class="icon-wrapper" data-feather="x-circle"></div>
+                    <h3>Ni démarchage</h3>
+                    <p class="small-text">Pas de relances. Un seul échange, clair et respectueux.</p>
+                </div>
+                <div class="service-card">
+                    <div class="icon-wrapper" data-feather="minus-circle"></div>
+                    <h3>Ni jargon</h3>
+                    <p class="small-text">Nous parlons matière, texture, parcours client.</p>
+                </div>
+                <div class="service-card">
+                    <div class="icon-wrapper" data-feather="shield-off"></div>
+                    <h3>Ni fragilité</h3>
+                    <p class="small-text">Des sites testés, robustes. Jamais de "débogage" pour vous.</p>
+                </div>
+            </div>
+        </section>
+        <!-- Travaux avec GALLERIE IMAGES -->
+        <section id="travaux" class="section-gsap">
+            <h2>Références & matière.</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1537832816519-689ad163238b?q=80&w=2070&auto=format"
+                        alt="Tissage laine">
+                    <div class="gallery-caption">Loro Piana — Identité textile</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1586339949216-35c2747cc36d?q=80&w=1974&auto=format"
+                        alt="Atelier couture">
+                    <div class="gallery-caption">Cifonelli — Sur-mesure</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2028&auto=format"
+                        alt="Maroquinerie">
+                    <div class="gallery-caption">Artisan cuir — Paris</div>
+                </div>
+
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">« Discrétion, exigence, exactitude. Une rareté dans le web. »</div>
+                    <div class="testimonial-author">— Loro Piana</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">« Cifonelli exige la perfection pixel par pixel. Ils l'ont comprise. »
+                    </div>
+                    <div class="testimonial-author">— Maison Cifonelli</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process -->
+        <section class="section-gsap">
+            <h2>Notre protocole.</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <h3>Échange (15 min)</h3>
+                    <p class="small-text">Téléphone, sans formulaire. Nous écoutons.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <h3>Maquette</h3>
+                    <p class="small-text">Vous validez — ou non — sans pression.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <h3>Livraison</h3>
+                    <p class="small-text">Sous 2 à 3 semaines. Un site fiable, sans surplus.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION FAQ -->
+        <section class="section-gsap" id="faq">
+            <h2>Questions fréquentes.</h2>
+            <p class="faq-subtitle">Des réponses claires, sans détour.</p>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Je n’y connais rien en informatique, c’est possible ?</span>
+                        <button class="faq-toggle" aria-label="Voir la réponse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolument. Nous traduisons tout en français. Vous n’aurez jamais à toucher une ligne de
+                            code. Notre métier est de rendre la technique invisible.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quel est le budget pour un site ?</span>
+                        <button class="faq-toggle" aria-label="Voir la réponse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>À partir de 3 500 € pour une présence soignée. Chaque projet est unique : nous établissons un
+                            devis ferme après avoir compris vos besoins. Pas de surprise.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Combien de temps pour livrer un site ?</span>
+                        <button class="faq-toggle" aria-label="Voir la réponse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Comptez 2 à 4 semaines entre la validation de la maquette et la mise en ligne. Nous
+                            privilégions la qualité à la rapidité, mais nous respectons nos délais.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Puis-je modifier mon site moi-même après ?</span>
+                        <button class="faq-toggle" aria-label="Voir la réponse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui — nous vous formons en 20 minutes. Sinon, nous faisons les modifications pour vous, au
+                            juste prix (facturation horaire claire et transparente).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Proposez-vous un accompagnement après livraison ?</span>
+                        <button class="faq-toggle" aria-label="Voir la réponse">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Bien sûr. Nous répondons à vos questions même un an après. Pas de contrat d'abonnement
+                            obligatoire — juste du service quand vous en avez besoin.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="section-gsap">
+            <h2>Nous écrire.</h2>
+            <div class="form-container">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Nom / Société</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Objet</label>
+                        <select id="subjectSelect">
+                            <option value="Site vitrine">Site vitrine</option>
+                            <option value="E-commerce / réservations">E-commerce / réservations</option>
+                            <option value="Refonte d'existant">Refonte d'existant</option>
+                            <option value="Conseil stratégique">Conseil stratégique</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Envoyer →</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION ARTICLES / RESSOURCES -->
+        <section class="section-gsap" id="articles">
+            <h2>Ressources & réflexions.</h2>
+            <p class="articles-subtitle">L'excellence numérique, simplement expliquée.</p>
+
+            <div class="articles-grid">
+                <article class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format"
+                            alt="Pourquoi un site clair convertit mieux">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">5 min de lecture · Stratégie</div>
+                        <h3>Pourquoi un site clair convertit mieux qu'un site « design »</h3>
+                        <p>Le luxe, c'est l'espace, le silence, la lisibilité. Découvrez pourquoi vos clients attendent
+                            avant tout de la confiance.</p>
+                        <a href="#" class="article-link">Lire l'article →</a>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=2070&auto=format"
+                            alt="Référencement discret">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">8 min · SEO</div>
+                        <h3>Référencement discret : être visible sans crier</h3>
+                        <p>Comment apparaître sur Google quand on est une maison de luxe ou un artisan d'exception —
+                            sans stratégie agressive.</p>
+                        <a href="#" class="article-link">Lire l'article →</a>
+                    </div>
+                </article>
+
+                <article class="article-card">
+                    <div class="article-image">
+                        <img src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=2070&auto=format"
+                            alt="Choisir son agence web">
+                    </div>
+                    <div class="article-content">
+                        <div class="article-meta">6 min · Guide</div>
+                        <h3>Comment choisir son agence web (sans se faire piéger)</h3>
+                        <p>Les 5 signes qui distinguent un partenaire fiable d'un vendeur de rêve. Un guide pour les
+                            professionnels exigeants.</p>
+                        <a href="#" class="article-link">Lire l'article →</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Pafar</h4>
+                    <a href="#philosophie">Philosophie</a>
+                    <a href="#travaux">Travaux</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Légal</h4>
+                    <a href="#">CGV</a>
+                    <a href="#">Mentions légales</a>
+                    <a href="#">Politique de confidentialité</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Suivre</h4>
+                    <div class="social-icons">
+                        <a href="#" data-feather="instagram"></a>
+                        <a href="#" data-feather="linkedin"></a>
+                        <a href="#" data-feather="mail"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                © Pafar — Présence web pour l'excellence artisanale et les maisons de luxe.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="js/gsap-animations.js"></script>
+    <script src="js/three-animation.js"></script>
+    <script src="js/main-ui.js"></script>
+</body>
+
+</html>
