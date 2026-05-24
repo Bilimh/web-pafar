@@ -1,65 +1,138 @@
-// three-animation.js - Version Épurée Luxe
+// three-animation.js - Globe ou pyramide de particules
 function heroCanvasScript() {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
 
-    const container = document.getElementById('heroCanvas');
+    const SHAPE = "pyramid"; // "globe" ou "pyramid"
+
+    const container = canvas.parentElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
 
     const scene = new THREE.Scene();
     scene.background = null;
 
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.z = 28;
+    camera.position.y = 1;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true
+    });
+
     renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     function getColorsForTheme() {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        
-        if (isDark) {
-            return {
+
+        return isDark
+            ? {
                 primary: new THREE.Color(0x00ffd1),
-                secondary: new THREE.Color(0x7b68ee),
-                opacity: 0.7,
-                lineOpacity: 0.2
-            };
-        } else {
-            return {
+                secondary: new THREE.Color(0x4a9eff),
+                accent: new THREE.Color(0x7b68ee),
+                opacity: 0.9
+            }
+            : {
                 primary: new THREE.Color(0x0066ff),
-                secondary: new THREE.Color(0x7b68ee),
-                opacity: 0.65,
-                lineOpacity: 0.15
+                secondary: new THREE.Color(0x3399ff),
+                accent: new THREE.Color(0x7b68ee),
+                opacity: 0.85
             };
-        }
     }
 
     let colorScheme = getColorsForTheme();
-    
-    // PETITS GRAINS (800 particules fines)
-    const particlesCount = 800;
+
+    const particlesCount = 2200;
     const positions = new Float32Array(particlesCount * 3);
     const colors = new Float32Array(particlesCount * 3);
 
-    for (let i = 0; i < particlesCount; i++) {
-        // Nuage organique
-        const radius = 14 + Math.random() * 10;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        
-        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.5;
-        positions[i * 3 + 2] = radius * Math.cos(phi) * 0.7;
-        
-        // Dégradé entre primaire et secondaire
-        const mixColor = colorScheme.primary.clone().lerp(colorScheme.secondary, Math.random());
-        const brightness = 0.5 + Math.random() * 0.5;
+    function setParticleColor(i, factor) {
+        let mixColor;
+
+        if (factor < 0.5) {
+            mixColor = colorScheme.primary.clone().lerp(colorScheme.secondary, factor * 2);
+        } else {
+            mixColor = colorScheme.secondary.clone().lerp(colorScheme.accent, (factor - 0.5) * 2);
+        }
+
+        const brightness = 0.55 + Math.random() * 0.65;
+
         colors[i * 3] = mixColor.r * brightness;
         colors[i * 3 + 1] = mixColor.g * brightness;
         colors[i * 3 + 2] = mixColor.b * brightness;
+    }
+
+    function createGlobe() {
+        const radius = 11;
+
+        for (let i = 0; i < particlesCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+
+            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.9;
+            positions[i * 3 + 2] = radius * Math.cos(phi);
+
+            setParticleColor(i, phi / Math.PI);
+        }
+    }
+
+    function createPyramid() {
+        const baseSize = 18;
+        const height = 17;
+
+        const vertices = [
+            new THREE.Vector3(0, height / 2, 0),
+            new THREE.Vector3(-baseSize / 2, -height / 2, -baseSize / 2),
+            new THREE.Vector3(baseSize / 2, -height / 2, -baseSize / 2),
+            new THREE.Vector3(baseSize / 2, -height / 2, baseSize / 2),
+            new THREE.Vector3(-baseSize / 2, -height / 2, baseSize / 2)
+        ];
+
+        const faces = [
+            [vertices[0], vertices[1], vertices[2]],
+            [vertices[0], vertices[2], vertices[3]],
+            [vertices[0], vertices[3], vertices[4]],
+            [vertices[0], vertices[4], vertices[1]],
+            [vertices[1], vertices[2], vertices[3]],
+            [vertices[1], vertices[3], vertices[4]]
+        ];
+
+        for (let i = 0; i < particlesCount; i++) {
+            const face = faces[Math.floor(Math.random() * faces.length)];
+
+            let u = Math.random();
+            let v = Math.random();
+
+            if (u + v > 1) {
+                u = 1 - u;
+                v = 1 - v;
+            }
+
+            const a = face[0];
+            const b = face[1];
+            const c = face[2];
+
+            const x = a.x + u * (b.x - a.x) + v * (c.x - a.x);
+            const y = a.y + u * (b.y - a.y) + v * (c.y - a.y);
+            const z = a.z + u * (b.z - a.z) + v * (c.z - a.z);
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+
+            const factor = (y + height / 2) / height;
+            setParticleColor(i, factor);
+        }
+    }
+
+    if (SHAPE === "pyramid") {
+        createPyramid();
+    } else {
+        createGlobe();
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -67,104 +140,67 @@ function heroCanvasScript() {
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const material = new THREE.PointsMaterial({
-        size: 0.12,  // PETITS GRAINS
+        size: 0.16,
         vertexColors: true,
         transparent: true,
         opacity: colorScheme.opacity,
-        blending: THREE.AdditiveBlending
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
     });
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
 
-    // FILS TRÈS FINS (connexions élégantes)
-    const lineMaterial = new THREE.LineBasicMaterial({ 
-        color: colorScheme.primary, 
-        transparent: true, 
-        opacity: colorScheme.lineOpacity
-    });
-    const linePositions = [];
-
-    for (let i = 0; i < particlesCount; i++) {
-        for (let j = i + 1; j < particlesCount; j++) {
-            const dx = positions[i * 3] - positions[j * 3];
-            const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-            const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            if (dist < 3.2 && Math.random() < 0.12) {
-                linePositions.push(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
-                linePositions.push(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]);
-            }
-        }
-    }
-
-    const lineGeometry = new THREE.BufferGeometry();
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
-    const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(lines);
-
     let time = 0;
 
     function animate() {
         requestAnimationFrame(animate);
-        time += 0.002;
-        
-        // Rotation très douce
-        particles.rotation.y = time * 0.1;
-        particles.rotation.x = Math.sin(time * 0.15) * 0.03;
-        particles.rotation.z = Math.cos(time * 0.12) * 0.02;
-        
-        lines.rotation.y = particles.rotation.y;
-        lines.rotation.x = particles.rotation.x;
-        lines.rotation.z = particles.rotation.z;
-        
-        // Micro-respiration
-        const scale = 1 + Math.sin(time * 0.6) * 0.008;
-        particles.scale.set(scale, scale, scale);
+        time += 0.01;
+
+        particles.rotation.y += 0.0025;
+        particles.rotation.x = Math.sin(time * 0.4) * 0.08;
 
         renderer.render(scene, camera);
     }
 
     animate();
 
-    window.addEventListener('resize', () => {
+    const resizeObserver = new ResizeObserver(() => {
         const newWidth = container.clientWidth;
         const newHeight = container.clientHeight;
+
         camera.aspect = newWidth / newHeight;
         camera.updateProjectionMatrix();
+
         renderer.setSize(newWidth, newHeight);
     });
 
-    // Adaptation au thème
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'data-theme') {
-                colorScheme = getColorsForTheme();
-                
-                // Mise à jour couleurs particules
-                for (let i = 0; i < particlesCount; i++) {
-                    const mixColor = colorScheme.primary.clone().lerp(colorScheme.secondary, Math.random());
-                    const brightness = 0.5 + Math.random() * 0.5;
-                    colors[i * 3] = mixColor.r * brightness;
-                    colors[i * 3 + 1] = mixColor.g * brightness;
-                    colors[i * 3 + 2] = mixColor.b * brightness;
-                }
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-                
-                material.opacity = colorScheme.opacity;
-                lineMaterial.color = colorScheme.primary;
-                lineMaterial.opacity = colorScheme.lineOpacity;
-            }
-        });
+    resizeObserver.observe(container);
+
+    const observer = new MutationObserver(() => {
+        colorScheme = getColorsForTheme();
+
+        for (let i = 0; i < particlesCount; i++) {
+            const factor = i / particlesCount;
+            setParticleColor(i, factor);
+        }
+
+        geometry.attributes.color.needsUpdate = true;
+        material.opacity = colorScheme.opacity;
     });
-    observer.observe(document.documentElement, { attributes: true });
+
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+    });
 }
 
-// Charger Three.js
 if (typeof THREE === 'undefined') {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = () => { setTimeout(heroCanvasScript, 100); };
+    script.onload = () => {
+        setTimeout(heroCanvasScript, 100);
+    };
     document.head.appendChild(script);
 } else {
     setTimeout(heroCanvasScript, 100);
